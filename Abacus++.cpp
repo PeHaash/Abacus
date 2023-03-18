@@ -3,7 +3,7 @@
 
 #include"Abacus++.h"
 
-#include<iostream>
+// #include<iostream> // for Debug
 
 
 const char Hex[] = "0123456789ABCDEF";
@@ -25,9 +25,21 @@ namespace Abacus{
 		Sign = (num>0)?+1:0;
 	}
 
-	// bool Integer::isSameSign(Integer b){
-	// 	return (b.Sign==Sign)?true:false;
-	// }
+	Integer::Integer(signed long long int num){
+		Number.push_back(num&MEM_BLOCK_MAX);
+		Number.push_back((num<<1)>>(MEM_BLOCK_SIZE*8 + 1)); // num<<1 : eliminate num sign
+		Sign = (num>0)?+1:((num==0)?0:-1);
+	}
+	Integer::Integer(unsigned long long int num){
+		Number.push_back(num&MEM_BLOCK_MAX);
+		Number.push_back(num>>(MEM_BLOCK_SIZE*8));
+		Sign = (num>0)?+1:0;
+	}
+	Integer::Integer(){
+		Number.push_back(0);
+		Sign = 0;
+	}
+
 
 	std::string Integer::InHex(){
 		std::string ret = (Sign==-1)?"-":"";
@@ -57,7 +69,7 @@ namespace Abacus{
 			if (Number[i]!=we_will_have_carry)
 				return *this;
 		}
-		std::cout <<Number[0]<<'\n';
+		// std::cout <<">>>>>"<<Number[0]<<'\n';
 		if(change == -1)
 			if(Number.size()==1){
 				Number[0]=0;
@@ -72,9 +84,12 @@ namespace Abacus{
 
 	}
 
-	Integer& Integer::HandleZeroStatus(){
-		if (Number.size()==1 && Number[0]==0)
+	Integer& Integer::HandleZeroStatus(){ // Zero sign AND leading zero!
+		if (Number.size()==1 && Number[0]==0){
 			Sign = 0;
+			return *this;
+		}
+		while(Number[Number.size()-1]==0) Number.pop_back();
 		return *this;
 	}
 
@@ -112,6 +127,7 @@ namespace Abacus{
 		// this->Integer((signed int)-1);
 		Number[0]=1;
 		Sign = -1;
+
 		return *this;
 
 	}

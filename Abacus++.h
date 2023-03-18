@@ -23,6 +23,9 @@ class Integer{
 	public:
 		Integer(signed int num);
 		Integer(unsigned int num);
+		Integer(signed long long int num);
+		Integer(unsigned long long int num);
+		Integer();
 		Integer& IncrementOne();
 		Integer& DecrementOne();
 		std::string InDec();
