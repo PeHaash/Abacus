@@ -5,6 +5,7 @@
 #include<string>
 
 #define MEM_BLOCK unsigned int
+#define MEM_BLOCK_SIZE 4
 
 namespace Abacus{
 
@@ -17,6 +18,7 @@ class Integer{
 	public:
 		Integer(int num);
 		std::string Print();
+		std::string InHex();
 
 };
 
