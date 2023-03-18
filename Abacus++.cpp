@@ -19,9 +19,9 @@ namespace Abacus{
 		Sign = (num>=0)?true:false;
 	}
 
-	// std::string Integer::Print(){
-	// 	return "Not Implemented Yet!";
-	// }
+	bool Integer::isSameSign(Integer b){
+		return (b.Sign==Sign)?true:false;
+	}
 
 	std::string Integer::InHex(){
 		std::string ret = Sign?"":"-";

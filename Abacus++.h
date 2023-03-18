@@ -19,6 +19,7 @@ class Integer{
 		Integer(int num);
 		std::string InDec();
 		std::string InHex();
+		bool isSameSign(Integer b);
 
 };
 
