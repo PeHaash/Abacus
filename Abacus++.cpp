@@ -1,9 +1,13 @@
 #include<vector>
 #include<string>
+#include<iostream>
+
 #include"Abacus++.h"
 
-const std::string Hex = "0123456789ABCDEF";
-std::string ByteToHex(char n){
+
+
+const char Hex[] = "0123456789ABCDEF";
+std::string ByteToHex(unsigned char n){
 	std::string ret="  ";
 	ret[0] = Hex[(n>>4)];
 	ret[1] = Hex[(n&15)];
@@ -20,7 +24,7 @@ namespace Abacus{
 		return "Not Implemented Yet!";
 	}
 	std::string Integer::InHex(){
-		std::string ret = Sign?"+":"-";
+		std::string ret = Sign?"":"-";
 
 		for(int i = Number.size()-1;i>=0;i--){
 			for(int j = MEM_BLOCK_SIZE-1; j>=0;j--){
