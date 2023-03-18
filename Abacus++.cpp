@@ -3,6 +3,7 @@
 
 #include"Abacus++.h"
 
+#include<iostream>
 
 
 const char Hex[] = "0123456789ABCDEF";
@@ -14,17 +15,22 @@ std::string ByteToHex(unsigned char n){
 }
 
 namespace Abacus{
-	Integer::Integer(int num){
+	Integer::Integer(signed int num){
 		Number.push_back(abs(num));
-		Sign = (num>=0)?true:false;
+		Sign = (num>0)?+1:((num==0)?0:-1);
 	}
 
-	bool Integer::isSameSign(Integer b){
-		return (b.Sign==Sign)?true:false;
+	Integer::Integer(unsigned int num){
+		Number.push_back(num);
+		Sign = (num>0)?+1:0;
 	}
+
+	// bool Integer::isSameSign(Integer b){
+	// 	return (b.Sign==Sign)?true:false;
+	// }
 
 	std::string Integer::InHex(){
-		std::string ret = Sign?"":"-";
+		std::string ret = (Sign==-1)?"-":"";
 
 		for(int i = Number.size()-1;i>=0;i--){
 			for(int j = MEM_BLOCK_SIZE-1; j>=0;j--){
@@ -36,7 +42,14 @@ namespace Abacus{
 		return ret;
 	}
 
-	Integer& Integer::Crement(char change, MEM_BLOCK Threshold){
+	/*
+		Abstract Crement: Do it without changing the sign.
+		change = 1: Going further from 0
+		change = -1: coming closer to 0
+		in change = -1, maybe we will reach 0: do not delete the zero!
+		zero should NOT come into Crement at any cost
+	*/ 
+	Integer& Integer::Crement(char change){
 		MEM_BLOCK we_will_have_carry = (change==1)?MEM_BLOCK_MIN:MEM_BLOCK_MAX;
 
 		for(unsigned int i=0;i<Number.size();i++){
@@ -44,25 +57,62 @@ namespace Abacus{
 			if (Number[i]!=we_will_have_carry)
 				return *this;
 		}
+		std::cout <<Number[0]<<'\n';
 		if(change == -1)
-			Number.pop_back();
+			if(Number.size()==1){
+				Number[0]=0;
+				Sign = 0;
+				// return *this;
+			}
+			else
+				Number.pop_back();
 		else
 			Number.push_back(1);
 		return *this;
 
 	}
 
+	Integer& Integer::HandleZeroStatus(){
+		if (Number.size()==1 && Number[0]==0)
+			Sign = 0;
+		return *this;
+	}
+
 	Integer& Integer::IncrementOne(){
-		if(Sign)
-			return this->Crement(+1, MEM_BLOCK_MAX);
-		else
-			return this->Crement(-1, MEM_BLOCK_MIN);
+		if(Sign==1){
+			this->Crement(+1);
+			this->HandleZeroStatus();
+			return *this;
+			// return this->Crement(+1)->HandleZeroStatus();
+		}
+		if(Sign==-1){
+			// return this->Crement(-1).HandleZeroStatus();
+			this->Crement(-1);
+			this->HandleZeroStatus();
+			return *this;
+		}
+		// Sign is zero now
+		// this->Integer((signed int)1);
+		Number[0]=1;
+		Sign = 1;
+		return *this;
 	}
 	Integer& Integer::DecrementOne(){
-		if(Sign)
-			return this->Crement(-1, MEM_BLOCK_MAX);
-		else
-			return this->Crement(+1, MEM_BLOCK_MIN);
+		if(Sign==1){
+			this->Crement(-1);
+			this->HandleZeroStatus();
+			return *this;
+		}
+		if(Sign ==-1){
+			this->Crement(+1);
+			this->HandleZeroStatus();
+			return *this;
+		}
+		// Sign is zero now
+		// this->Integer((signed int)-1);
+		Number[0]=1;
+		Sign = -1;
+		return *this;
 
 	}
 

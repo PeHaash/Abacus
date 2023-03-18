@@ -17,10 +17,12 @@ namespace Abacus{
 class Integer{
 	private:
 		std::vector<MEM_BLOCK> Number;
-		bool Sign;
-		Integer& Crement(char change, MEM_BLOCK Threshold);
+		signed char Sign; // +1/0/-1 : to save sanity of the code, we need three types for Sign, a simple true false is bad bc of +/-0
+		Integer& Crement(char change);
+		Integer& HandleZeroStatus();
 	public:
-		Integer(int num);
+		Integer(signed int num);
+		Integer(unsigned int num);
 		Integer& IncrementOne();
 		Integer& DecrementOne();
 		std::string InDec();
