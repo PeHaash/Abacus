@@ -43,3 +43,12 @@ class Integer{
 	0x123 is treated as hexadecimal.
 	0b101 is treated as binary (C++14).
 */
+
+/*
+	Integer Add(const &Integer a, const &Integer b);
+	Integer Subtract(const &Integer a, const &Integer b);
+	Integer UnsignedAdd(const &Integer a, const &Integer b); // add a & b, but without paying attention to signs
+	Integer GuaranteedSubtract(const &Integer a, const &Integer b); // a subtract when we know a > b
+	Integer Absolute(const &Integer a); //input/output can change
+	Integer Minus(const &Integer b);    // input/output can change
+*/
