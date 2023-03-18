@@ -35,4 +35,35 @@ namespace Abacus{
 
 		return ret;
 	}
+
+	Integer& Integer::Crement(char change, MEM_BLOCK Threshold){
+		MEM_BLOCK we_will_have_carry = (change==1)?MEM_BLOCK_MIN:MEM_BLOCK_MAX;
+
+		for(unsigned int i=0;i<Number.size();i++){
+			Number[i]+=change;
+			if (Number[i]!=we_will_have_carry)
+				return *this;
+		}
+		if(change == -1)
+			Number.pop_back();
+		else
+			Number.push_back(1);
+		return *this;
+
+	}
+
+	Integer& Integer::IncrementOne(){
+		if(Sign)
+			return this->Crement(+1, MEM_BLOCK_MAX);
+		else
+			return this->Crement(-1, MEM_BLOCK_MIN);
+	}
+	Integer& Integer::DecrementOne(){
+		if(Sign)
+			return this->Crement(-1, MEM_BLOCK_MAX);
+		else
+			return this->Crement(+1, MEM_BLOCK_MIN);
+
+	}
+
 }
