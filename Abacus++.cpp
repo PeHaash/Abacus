@@ -1,7 +1,10 @@
 #include<vector>
+#include<string>
 #include"Abacus++.h"
 
 
-int hello(){
-	return 2;
+namespace Abacus{
+	std::string Integer::Print(){
+		return "Not Implemented Yet!";
+	}
 }

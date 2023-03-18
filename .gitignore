@@ -1,0 +1,6 @@
+test.cpp
+build.bat
+
+# execution files:
+*.exe
+*.o
