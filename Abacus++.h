@@ -17,12 +17,11 @@ class Integer{
 		bool Sign;
 	public:
 		Integer(int num);
-		std::string Print();
+		std::string InDec();
 		std::string InHex();
 
 };
 
-// #define SIZEOF(object) (char *)(&object+1) - (char *)(&object)
 
 }
 #endif

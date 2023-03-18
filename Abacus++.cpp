@@ -1,6 +1,5 @@
 #include<vector>
 #include<string>
-#include<iostream>
 
 #include"Abacus++.h"
 
@@ -20,9 +19,10 @@ namespace Abacus{
 		Sign = (num>=0)?true:false;
 	}
 
-	std::string Integer::Print(){
-		return "Not Implemented Yet!";
-	}
+	// std::string Integer::Print(){
+	// 	return "Not Implemented Yet!";
+	// }
+
 	std::string Integer::InHex(){
 		std::string ret = Sign?"":"-";
 
