@@ -3,7 +3,7 @@
 
 #include"Abacus++.h"
 
-// #include<iostream> // for Debug
+#include"Debug.h" // for Debug
 
 
 const char Hex[] = "0123456789ABCDEF";
@@ -135,11 +135,14 @@ namespace Abacus{
 	}
 
 	Integer& Integer::HandleZeroStatus(){ // Zero sign AND leading zero!
+		while(Number[Number.size()-1]==0)
+			Number.pop_back();
+		if (Number.size()==0)
+			Number.push_back(0);
 		if (Number.size()==1 && Number[0]==0){
 			Sign = 0;
 			return *this;
 		}
-		while(Number[Number.size()-1]==0) Number.pop_back();
 		return *this;
 	}
 
@@ -180,6 +183,34 @@ namespace Abacus{
 
 		return *this;
 
+	}
+
+	void Integer::HexFromString(std::string num){
+		int number_start = 0;
+		Sign = +1;
+		if(num[0]=='+'){
+			Sign = +1;
+			number_start++;
+		}
+		else if(num[0]=='-'){
+			Sign = -1;
+			number_start++;
+		}
+		Number.clear();
+		for(int i = num.size()-1,digit = 0;i>=number_start;i--,digit++){
+			if(digit%8==0)
+				Number.push_back(0);
+			char n = (num[i]<='9' && num[i]>='0')?num[i]-'0':
+						(num[i]>='a' && num[i]<='f')?(num[i]-'a'+10):
+						(num[i]>='A' && num[i]<='f')?(num[i]-'A'+10):throw("Not a valid digit");
+			// std::cout<<num[i]<<' '<<int(n)<<std::endl;
+			Number[digit/8]+=n<<((digit%8)*4);
+
+		}
+		this->HandleZeroStatus();
+	}
+
+	Integer Integer::Add(const Integer &a, const Integer &b){
 	}
 
 }

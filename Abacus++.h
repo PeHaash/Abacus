@@ -3,7 +3,7 @@
 
 #include<vector>
 #include<string>
-
+#include"Debug.h"
 #define MEM_BLOCK unsigned int
 #define MEM_BLOCK_SIZE 4
 #define MEM_BLOCK_MAX 0xFFFFFFFF
@@ -34,7 +34,8 @@ class Integer{
 		std::string InDec();
 		std::string InHex();
 		bool isSameSign(Integer b);
-
+		void HexFromString(std::string num);
+		static Integer Add(const Integer &a, const Integer &b);
 };
 
 
