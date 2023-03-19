@@ -39,6 +39,56 @@ namespace Abacus{
 		Number.push_back(0);
 		Sign = 0;
 	}
+/*
+	in Integer from string:
+	123 / -123  is treated as decimal.
+	0123 / -0123 is treated as octal.
+	0x123 / -0x123 is treated as hexadecimal.
+	0b101 / -0b101 is treated as binary (C++14).
+	b17:150 is treated as number in customized base, we can use "," to seperate "digits"
+*/
+	Integer::Integer(char* num){
+		Integer(std::string(num));
+	}
+
+	Integer::Integer(const char* num){
+		Integer(std::string(num));
+	}
+	/*
+		has many bugs, very unclear, should improved by regex
+	*/
+	Integer::Integer(std::string num){
+		int start_of_number = 0;
+		if (num[start_of_number] =='-'){
+			Sign = -1;
+			start_of_number++;
+		}
+		if (num[start_of_number]!='0' && num[start_of_number]!='b' && num[start_of_number]>='1' && num[start_of_number]<='9'){
+			// number is in base 10
+			throw("Base 10 from string is not implemented yet");
+			/* implementation here */
+			return;
+		}
+		if(num[start_of_number]=='b'){
+			// customized base
+			throw("custom base is not implemented yet");
+			/* implementation here */
+			return;
+		}
+		// base binary, hexadecimal, octal
+		if(num[start_of_number]!='0'){
+			throw("Not a Number");
+			return;
+		}
+		start_of_number++;
+		if(num[start_of_number]=='x'){
+			start_of_number++;
+		}
+		throw("Maybe octal or binary or Hex, but not implemented yet");
+		throw("sorry");
+
+
+	}
 
 
 	std::string Integer::InHex(){

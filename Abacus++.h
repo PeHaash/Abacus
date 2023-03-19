@@ -26,6 +26,9 @@ class Integer{
 		Integer(signed long long int num);
 		Integer(unsigned long long int num);
 		Integer();
+		Integer(char* num);
+		Integer(const char* num);		
+		Integer(std::string num);
 		Integer& IncrementOne();
 		Integer& DecrementOne();
 		std::string InDec();
