@@ -92,15 +92,25 @@ namespace Abacus{
 	}
 
 
-	std::string Integer::InHex(){
+	std::string Integer::InHex(bool leading_zero, char seperator){
 		std::string ret = (Sign==-1)?"-":"";
 
 		for(int i = Number.size()-1;i>=0;i--){
 			for(int j = MEM_BLOCK_SIZE-1; j>=0;j--){
 				ret+=ByteToHex(char(*(((char *)&Number[i])+j)));
-				ret+=" ";
+				if(seperator !='X')
+					ret+=seperator;
 			}
 		}
+		if(!leading_zero)
+			for(unsigned int i = 0; i < ret.size()-1;i++)
+				if (ret[i]!='0'){
+					ret.erase(0,i);
+					return ret;
+				}
+
+			
+
 
 		return ret;
 	}

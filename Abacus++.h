@@ -36,7 +36,7 @@ class Integer{
 		Integer& DecrementOne();
 		Integer& Negate();
 		std::string InDec();
-		std::string InHex();
+		std::string InHex(bool leading_zero = true, char seperator = ' ');
 		bool isSameSign(Integer b);
 		void HexFromString(std::string num);
 		static Integer Add(const Integer &a, const Integer &b);

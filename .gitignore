@@ -1,6 +1,12 @@
 test.cpp
 build.bat
 
+# python & test files:
+*.py
+*.txt
+testcode.bat
+timecmd.bat
+
 # execution files:
 *.exe
 *.o
