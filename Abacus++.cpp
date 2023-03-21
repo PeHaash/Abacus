@@ -1,5 +1,6 @@
 #include<vector>
 #include<string>
+#include<algorithm>
 
 #include"Abacus++.h"
 
@@ -165,6 +166,7 @@ namespace Abacus{
 		Sign = 1;
 		return *this;
 	}
+
 	Integer& Integer::DecrementOne(){
 		if(Sign==1){
 			this->Crement(-1);
@@ -210,7 +212,64 @@ namespace Abacus{
 		this->HandleZeroStatus();
 	}
 
-	Integer Integer::Add(const Integer &a, const Integer &b){
+	Integer& Integer::Negate(){
+		Sign = -Sign;
+		return *this;
 	}
 
+	Integer Integer::Add(const Integer &a, const Integer &b){
+		if (a.Sign == 0)
+			return b;
+		if (b.Sign == 0)
+			return a;
+		if (a.Sign == +1 && b.Sign == +1)
+			return SignFreeAddition(a,b);
+		if (a.Sign == -1 && b.Sign == -1)
+			return SignFreeAddition(a,b).Negate();
+		throw("Not implemented");
+	}
+
+	Integer Integer::SignFreeAddition(const Integer &a, const Integer &b){
+		const Integer& longerr_one = a.Number.size()>b.Number.size()?a:b; // new refrences to work effectiverly
+		const Integer& shorter_one = a.Number.size()>b.Number.size()?b:a;
+		// Integer ret = new Integer();
+		Integer ret; ret.Number.pop_back();ret.Sign = +1;
+		BIG_BLOCK value, carry = 0;
+		int pointer;
+		int carry_range = shorter_one.Number.size(), end_range = longerr_one.Number.size();
+		for(pointer = 0; pointer<carry_range; pointer++){
+			value = (BIG_BLOCK) shorter_one.Number[pointer] + (BIG_BLOCK)longerr_one.Number[pointer] + carry;
+			carry = value >>(MEM_BLOCK_SIZE*8);
+			ret.Number.push_back((MEM_BLOCK)(value & MEM_BLOCK_MAX));
+		}
+
+		for(; pointer < end_range; pointer++){
+			value = (BIG_BLOCK)longerr_one.Number[pointer] + carry;
+			carry = value >>(MEM_BLOCK_SIZE*8);
+			ret.Number.push_back((MEM_BLOCK)(value & MEM_BLOCK_MAX));
+		}
+		if(carry)
+			ret.Number.push_back(carry);
+		return ret;
+
+	}
+
+
+
 }
+
+/*
+			void jam(int a[],int b[],int c[])
+			{
+			     if ((al(a)==1) && (al(b)==1))   { mjam(a,b,c);return;}
+			     if ((al(a)==-1) && (al(b)==-1)) { mjam(a,b,c);man1(c);return;}
+			     if ((al(a)==1) && (al(b)==-1))  { if (absmo(a,b)==-1){ mmenha(a,b,c);return;}
+			                                       if (absmo(a,b)== 0){ clear(c);return;} 
+			                                       if (absmo(a,b)== 1){ mos(b);mmenha(b,a,c);man(b);man1(c);return;}   }
+			     if ((al(a)==-1) && (al(b)==1))  { if (absmo(b,a)==-1){ mmenha(b,a,c);return;}
+			                                       if (absmo(b,a)== 0){ clear(c);return;} 
+			                                       if (absmo(b,a)== 1){ mmenha(a,b,c);man1(c);return;}   }
+			     
+			} 
+
+*/

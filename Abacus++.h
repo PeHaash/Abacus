@@ -5,6 +5,7 @@
 #include<string>
 #include"Debug.h"
 #define MEM_BLOCK unsigned int
+#define BIG_BLOCK unsigned long long int
 #define MEM_BLOCK_SIZE 4
 #define MEM_BLOCK_MAX 0xFFFFFFFF
 #define MEM_BLOCK_MIN 0x0
@@ -20,6 +21,8 @@ class Integer{
 		signed char Sign; // +1/0/-1 : to save sanity of the code, we need three types for Sign, a simple true false is bad bc of +/-0
 		Integer& Crement(char change);
 		Integer& HandleZeroStatus();
+		static Integer SignFreeAddition(const Integer &a, const Integer &b); 
+
 	public:
 		Integer(signed int num);
 		Integer(unsigned int num);
@@ -31,6 +34,7 @@ class Integer{
 		Integer(std::string num);
 		Integer& IncrementOne();
 		Integer& DecrementOne();
+		Integer& Negate();
 		std::string InDec();
 		std::string InHex();
 		bool isSameSign(Integer b);
