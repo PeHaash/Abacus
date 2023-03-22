@@ -228,7 +228,7 @@ namespace Abacus{
 	}
 
 
-	// to many Ifs here, can be optimized drastically
+	// to many Ifs here, can be optimized drastically #optimization
 	Integer Integer::Add(const Integer &a, const Integer &b){
 		if (a.Sign == 0)
 			return b;
@@ -260,7 +260,46 @@ namespace Abacus{
 		
 	}
 
-	Integer Integer::SignFreeSubtraction(const Integer &a, const Integer &b){ // a > b, we need a - b
+	// a - b
+	// we can subtract ifs #optimization
+	Integer Integer::Subtract(const Integer &a, const Integer &b){
+		Integer ret;
+		if (b.Sign == 0)
+			return a;
+		if (a.Sign == 0){
+			ret = b;
+			return ret.Negate();
+		}
+		if (a.Sign == +1 && b.Sign == -1)
+			return SignFreeAddition(a, b);
+		if (a.Sign == -1 && b.Sign == +1)
+			return SignFreeAddition(a, b).Negate();
+		if (a.Sign == +1 && b.Sign == +1){
+			int s = SignFreeComparison(a, b);
+			if (s == 0)
+				return 0;
+			if (s == +1) // a < b
+				return SignFreeSubtraction(b, a).Negate();
+			if (s == -1) // a > b
+				return SignFreeSubtraction(a, b);
+		}
+		if (a.Sign == -1 && b.Sign == -1){
+			int s = SignFreeComparison(a, b);
+			if (s == 0)
+				return 0;
+			// ret = SignFreeSubtraction(b, a);
+			if (s == +1) // b > a
+				return SignFreeSubtraction(b, a);
+			if (s == -1) // a > b
+				return SignFreeSubtraction(a, b).Negate();
+		}
+
+		throw("??");
+
+	}
+
+
+	Integer Integer::SignFreeSubtraction(const Integer &a, const Integer &b){ // a > b, a!=b (important!!), we need a - b
 		Integer ret; ret.Number.pop_back();ret.Sign = +1;
 		int carry_range = b.Number.size();
 		int end_range = a.Number.size();
@@ -338,6 +377,7 @@ namespace Abacus{
 		return ret;
 
 	}
+
 
 
 }

@@ -44,6 +44,7 @@ class Integer{
 		bool isSameSign(Integer b);
 		void HexFromString(std::string num);
 		static Integer Add(const Integer &a, const Integer &b);
+		static Integer Subtract(const Integer &a, const Integer &b);
 };
 
 
