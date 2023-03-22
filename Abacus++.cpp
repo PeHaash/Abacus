@@ -102,16 +102,16 @@ namespace Abacus{
 					ret+=seperator;
 			}
 		}
-		if(!leading_zero)
-			for(unsigned int i = 0; i < ret.size()-1;i++)
+
+		if(!leading_zero){
+			int start = (Sign ==-1)?1:0;
+			for(unsigned int i = start; i < ret.size();i++)
 				if (ret[i]!='0'){
-					ret.erase(0,i);
+					ret.erase(start,i-start);
 					return ret;
 				}
-
-			
-
-
+			return "0";
+		}
 		return ret;
 	}
 
@@ -130,7 +130,7 @@ namespace Abacus{
 			if (Number[i]!=we_will_have_carry)
 				return *this;
 		}
-		// std::cout <<">>>>>"<<Number[0]<<'\n';
+
 		if(change == -1)
 			if(Number.size()==1){
 				Number[0]=0;
@@ -227,6 +227,8 @@ namespace Abacus{
 		return *this;
 	}
 
+
+	// to many Ifs here, can be optimized drastically
 	Integer Integer::Add(const Integer &a, const Integer &b){
 		if (a.Sign == 0)
 			return b;
@@ -236,7 +238,80 @@ namespace Abacus{
 			return SignFreeAddition(a,b);
 		if (a.Sign == -1 && b.Sign == -1)
 			return SignFreeAddition(a,b).Negate();
-		throw("Not implemented");
+		if (a.Sign == +1 && b.Sign == -1){
+			int s = SignFreeComparison(a, b);
+			if (s==0)
+				return Integer(0);
+			if (s==+1) // |b| > a
+				return SignFreeSubtraction(b, a).Negate();
+			if (s==-1) // a > |b|
+				return SignFreeSubtraction(a, b);
+		}
+		if (a.Sign ==-1 && b.Sign ==+1){ // last situation
+			int s = SignFreeComparison(a, b);
+			if (s==0)
+				return Integer(0);
+			if (s==+1) // b > |a|
+				return SignFreeSubtraction(b, a);
+			if (s==-1) // b < |a|
+				return SignFreeSubtraction(a, b).Negate();
+		}
+		throw("????");
+		
+	}
+
+	Integer Integer::SignFreeSubtraction(const Integer &a, const Integer &b){ // a > b, we need a - b
+		Integer ret; ret.Number.pop_back();ret.Sign = +1;
+		int carry_range = b.Number.size();
+		int end_range = a.Number.size();
+		MEM_BLOCK has_carried_away = 0;
+		int pointer = 0;
+		for(; pointer < carry_range; pointer++){
+			if((b.Number[pointer] > a.Number[pointer])||(has_carried_away && b.Number[pointer]==a.Number[pointer])){
+				// can't handle the pressure, should borrow from next house
+				ret.Number.push_back(
+					(MEM_BLOCK)
+					((BIG_BLOCK)a.Number[pointer]
+					+(BIG_BLOCK)MEM_BLOCK_MAX)+(BIG_BLOCK)1
+					-(BIG_BLOCK)has_carried_away
+					-(BIG_BLOCK)b.Number[pointer]);
+				has_carried_away = 1; 
+			}else{
+				ret.Number.push_back(
+					a.Number[pointer]
+					-has_carried_away
+					-b.Number[pointer]);
+				has_carried_away = 0;
+			}
+		}
+
+		for(; pointer < end_range; pointer++){
+			if(has_carried_away && a.Number[pointer]==0){
+				// can't handle the pressure, should borrow from next house, number = 0, carry= 1
+				ret.Number.push_back(MEM_BLOCK_MAX);
+				has_carried_away = 1;
+			}else{
+				ret.Number.push_back(a.Number[pointer] - has_carried_away);
+				has_carried_away = 0;
+			}
+		}
+		if(has_carried_away)
+			throw("shit?");
+		if(ret.Number[ret.Number.size()-1]==0)
+			ret.Number.pop_back();
+
+		return ret;
+	}
+
+	// +1: b is bigger, -1: a is bigger, 0: equal
+	int Integer::SignFreeComparison(const Integer &a, const Integer &b){
+		if(a.Number.size()!=b.Number.size())
+			return a.Number.size() > b.Number.size()?-1:+1;
+		for(int i = a.Number.size()-1;i>=0;i--)
+			if(a.Number[i]!=b.Number[i])
+				return (a.Number[i] > b.Number[i])?-1:+1;
+		return 0;
+
 	}
 
 	Integer Integer::SignFreeAddition(const Integer &a, const Integer &b){
@@ -263,7 +338,6 @@ namespace Abacus{
 		return ret;
 
 	}
-
 
 
 }

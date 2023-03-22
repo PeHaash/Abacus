@@ -22,8 +22,12 @@ class Integer{
 		Integer& Crement(char change);
 		Integer& HandleZeroStatus();
 		static Integer SignFreeAddition(const Integer &a, const Integer &b); 
+		static int SignFreeComparison(const Integer &a, const Integer &b); // +1: b is bigger, -1: a is bigger, 0: equal
+		static Integer SignFreeSubtraction(const Integer &a, const Integer &b);
 
 	public:
+		// static int SignFreeComparison(const Integer &a, const Integer &b); // +1: b is bigger, -1: a is bigger, 0: equal
+
 		Integer(signed int num);
 		Integer(unsigned int num);
 		Integer(signed long long int num);
@@ -51,7 +55,7 @@ class Integer{
 	0x123 is treated as hexadecimal.
 	0b101 is treated as binary (C++14).
 */
-
+// bool operator() (int i,int j) { return (i<j);}
 /*
 	Integer Add(const &Integer a, const &Integer b);
 	Integer Subtract(const &Integer a, const &Integer b);
